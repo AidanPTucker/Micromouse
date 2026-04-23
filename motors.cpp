@@ -13,7 +13,7 @@ float current_pwm_r = 0;
 int last_wall_error = 0; 
 float target_yaw = 0.0; 
 bool brake_at_end = true; 
-int motor_speed_limit = SPEED_SEARCH; // Default to search speed
+int motor_speed_limit = SPEED_SEARCH; 
 
 long current_ticks_per_cell = TICKS_PER_CELL;
 float last_turn_error = 0.0;
@@ -74,7 +74,7 @@ void moveForwardOffset(int cells, int offset_ticks, bool stop_at_end) {
   current_action = ACTION_FORWARD;
   last_wall_error = 0; 
   brake_at_end = stop_at_end;
-  is_calibrating_wall = false;
+  is_calibrating_wall = false; 
 }
 
 void turnLeft() {
@@ -116,7 +116,6 @@ void updateMotion() {
      current_left_val = readSensor(PIN_EM_SIDE, PIN_RX_SL);
      current_right_val = readSensor(PIN_EM_SIDE, PIN_RX_SR);
 
-     // 1. WINDOWED PEG DETECTION
      long sensor_pos_l = pos_l + SENSOR_OFFSET_TICKS;
      long sensor_pos_r = pos_r + SENSOR_OFFSET_TICKS;
      long half_cell = current_ticks_per_cell / 2;
@@ -138,7 +137,6 @@ void updateMotion() {
      last_left_val = current_left_val;
      last_right_val = current_right_val;
 
-     // 2. FRONT WALL (Symmetry Filter, Drift Fix Removed)
      if (is_calibrating_wall) {
          int front_l = readSensor(PIN_EM_FWD, PIN_RX_FL);
          int front_r = readSensor(PIN_EM_FWD, PIN_RX_FR);
@@ -148,7 +146,7 @@ void updateMotion() {
             abs(front_l - front_r) < FRONT_SYMMETRY_TOLERANCE) {
              
              if (pos_l > current_ticks_per_cell / 2) {
-                 finished = true; // Brakes hit! Drift math removed.
+                 finished = true; 
              }
          }
      }
@@ -174,7 +172,7 @@ void updateMotion() {
       if (brake_at_end) {
           long dist_rem = (target_left - pos_l + target_right - pos_r) / 2;
           target_vel = min((float)SPEED_CRUISE, (float)sqrt(2.0 * 1000.0 * 0.35 * abs(dist_rem)));
-          if (target_vel < 120) target_vel = 120; // Boosted floor
+          if (target_vel < 120) target_vel = 120; 
       } else {
           target_vel = SPEED_CRUISE; 
       }
@@ -188,14 +186,13 @@ void updateMotion() {
       last_turn_error = error;
   }
 
-  if (current_pwm_l < 100) current_pwm_l = 120; // Boosted floor
+  if (current_pwm_l < 100) current_pwm_l = 120; 
   if (current_pwm_l < target_vel) current_pwm_l += 2.0; else current_pwm_l = target_vel;
   current_pwm_r = current_pwm_l;
 
   int out_l = (int)current_pwm_l;
   int out_r = (int)current_pwm_r;
 
-  // 3. COMBINED GYRO + WALL STEERING
   if (current_action == ACTION_FORWARD) {
       int current_error = getWallError(current_left_val, current_right_val);
       bool hasLeft = (current_left_val > IR_WALL_THRESHOLD);
@@ -215,24 +212,20 @@ void updateMotion() {
           last_wall_error = current_error;
       } else { last_wall_error = 0; }
 
-      // Clamp wall steering tightly so it can't overpower the gyro compass
       wall_steer = constrain(wall_steer, -50, 50); 
       int corr_steer = (int)(gyro_steer + wall_steer);
       
-      // Calculate raw desired speeds
       int raw_l = (int)current_pwm_l - corr_steer;
       int raw_r = (int)current_pwm_r + corr_steer;
 
-      // THE OVERFLOW FIX: Preserve the steering differential at top speed!
       if (raw_l > 255) { 
-          raw_r -= (raw_l - 255); // Subtract the overflow from the right wheel
+          raw_r -= (raw_l - 255); 
           raw_l = 255; 
       } else if (raw_r > 255) { 
-          raw_l -= (raw_r - 255); // Subtract the overflow from the left wheel
+          raw_l -= (raw_r - 255); 
           raw_r = 255; 
       }
 
-      // Final safety constrain
       out_l = constrain(raw_l, 0, 255);
       out_r = constrain(raw_r, 0, 255);
   } 

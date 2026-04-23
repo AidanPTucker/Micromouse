@@ -7,7 +7,6 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 
-// --- DYNAMIC CALIBRATION VARIABLES ---
 extern int TARGET_SIDE_L;
 extern int TARGET_SIDE_R;
 extern int IR_WALL_THRESHOLD;
@@ -28,7 +27,6 @@ int readSensor(int emitter, int receiver);
 int getWallError(int left_val, int right_val);
 bool isGyroCalibrated(); 
 
-// --- NEW: Active Gyro Realignment ---
 void realignGyro(float true_grid_angle); 
 
 #endif

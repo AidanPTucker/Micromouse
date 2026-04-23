@@ -10,8 +10,8 @@ extern long target_right;
 
 extern long current_ticks_per_cell;
 extern float last_turn_error;
-extern bool brake_at_end; // <--- THE FIX: Expose this to the main sketch!
-extern int motor_speed_limit; // <--- Added this variable
+extern bool brake_at_end; 
+extern int motor_speed_limit; 
 
 enum Action { 
     ACTION_STOP, 

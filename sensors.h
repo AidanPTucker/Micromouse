@@ -10,7 +10,7 @@
 extern int TARGET_SIDE_L;
 extern int TARGET_SIDE_R;
 extern int IR_WALL_THRESHOLD;
-extern int IR_PEG_THRESHOLD;
+extern int IR_NO_WALL_THRESHOLD;
 
 void setupSensors();
 void setupGyro(); 

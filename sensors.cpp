@@ -4,10 +4,10 @@
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x29);
 float gyro_offset = 0.0; 
 
-int TARGET_SIDE_L = 360;
-int TARGET_SIDE_R = 360;
-int IR_WALL_THRESHOLD = 150;
-int IR_PEG_THRESHOLD = 60;
+int TARGET_SIDE_L;
+int TARGET_SIDE_R;
+int IR_WALL_THRESHOLD;
+int IR_NO_WALL_THRESHOLD;
 
 void setupGyro() {
   if (!bno.begin(OPERATION_MODE_IMUPLUS)) {
@@ -72,7 +72,7 @@ void calibrateSideSensors() {
   
   IR_WALL_THRESHOLD = avg_wall * 0.30; 
   
-  IR_PEG_THRESHOLD = avg_wall * 0.15;  
+  IR_NO_WALL_THRESHOLD = avg_wall * 0.15;  
 }
 
 bool wallFront() {

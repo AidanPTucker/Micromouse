@@ -120,14 +120,14 @@ void updateMotion() {
      long sensor_pos_r = pos_r + SENSOR_OFFSET_TICKS;
      long half_cell = current_ticks_per_cell / 2;
 
-     if (last_left_val > IR_WALL_THRESHOLD && current_left_val < IR_PEG_THRESHOLD) {
+     if (last_left_val > IR_WALL_THRESHOLD && current_left_val < IR_NO_WALL_THRESHOLD) {
          if (abs((sensor_pos_l % current_ticks_per_cell) - half_cell) < 250) {
              long gap_num = round((float)(sensor_pos_l - half_cell) / current_ticks_per_cell);
              long exact_gap_pos = (gap_num * current_ticks_per_cell) + half_cell;
              noInterrupts(); enc_left = exact_gap_pos - SENSOR_OFFSET_TICKS; interrupts();
          }
      }
-     if (last_right_val > IR_WALL_THRESHOLD && current_right_val < IR_PEG_THRESHOLD) {
+     if (last_right_val > IR_WALL_THRESHOLD && current_right_val < IR_NO_WALL_THRESHOLD) {
          if (abs((sensor_pos_r % current_ticks_per_cell) - half_cell) < 250) {
              long gap_num = round((float)(sensor_pos_r - half_cell) / current_ticks_per_cell);
              long exact_gap_pos = (gap_num * current_ticks_per_cell) + half_cell;

@@ -16,10 +16,8 @@ int heading = 0;
 enum State { 
     SEARCH_TO_GOAL, 
     RETURN_TO_START, 
-    SPEED_RUN_SAFE, 
-    SPEED_RUN_SAFE_RETURN,
-    SPEED_RUN_FAST, 
-    SPEED_RUN_FAST_RETURN,
+    SPEED_RUN_SAFE,
+    SPEED_RUN_FAST,
     FINISHED 
 };
 State mouseState = SEARCH_TO_GOAL;
@@ -57,9 +55,7 @@ void loop() {
     
     bool atGoal = isGoal(curX, curY);
     bool isSpeedRun = (mouseState == SPEED_RUN_SAFE || mouseState == SPEED_RUN_FAST);
-    bool isReturning = (mouseState == RETURN_TO_START || 
-                        mouseState == SPEED_RUN_SAFE_RETURN || 
-                        mouseState == SPEED_RUN_FAST_RETURN);
+    bool isReturning = (mouseState == RETURN_TO_START);
 
     if ((mouseState == SEARCH_TO_GOAL || isSpeedRun) && atGoal) {
         logEvent(2);
@@ -69,8 +65,8 @@ void loop() {
         stopMotors();
         pixels.setPixelColor(0, pixels.Color(50, 0, 50)); pixels.show();
         delay(2000);
-        if (mouseState == SPEED_RUN_SAFE) mouseState = SPEED_RUN_SAFE_RETURN;
-        else if (mouseState == SPEED_RUN_FAST) mouseState = SPEED_RUN_FAST_RETURN;
+        if (mouseState == SPEED_RUN_SAFE) mouseState = RETURN_TO_START;
+        else if (mouseState == SPEED_RUN_FAST) mouseState = RETURN_TO_START;
         else mouseState = RETURN_TO_START;
         logEvent(3);
         return;
@@ -179,9 +175,7 @@ void loop() {
 }
 
 int getBestNeighbor(int x, int y) {
-    bool isReturning = (mouseState == RETURN_TO_START || 
-                        mouseState == SPEED_RUN_SAFE_RETURN || 
-                        mouseState == SPEED_RUN_FAST_RETURN);
+    bool isReturning = (mouseState == RETURN_TO_START);
     if (isReturning && x == 0 && y == 0) return -1;
     if (!isReturning && isGoal(x, y)) return -1;
     

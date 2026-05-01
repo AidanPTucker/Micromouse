@@ -56,10 +56,25 @@ void updateWallState(int x, int y, int heading, bool front, bool right, bool lef
             if (left)  maze_walls[current] |= WALL_S;
             break;
     }
-    if (maze_walls[current] & WALL_N) { int n = idx(x, y+1); if (n != -1) maze_walls[n] |= WALL_S; }
-    if (maze_walls[current] & WALL_E) { int n = idx(x+1, y); if (n != -1) maze_walls[n] |= WALL_W; }
-    if (maze_walls[current] & WALL_S) { int n = idx(x, y-1); if (n != -1) maze_walls[n] |= WALL_N; }
-    if (maze_walls[current] & WALL_W) { int n = idx(x-1, y); if (n != -1) maze_walls[n] |= WALL_E; }
+    if (maze_walls[current] & WALL_N) { 
+        int n = idx(x, y+1); 
+        if (n != -1) maze_walls[n] |= WALL_S; 
+    }
+    
+    if (maze_walls[current] & WALL_E) { 
+        int n = idx(x+1, y); 
+        if (n != -1) maze_walls[n] |= WALL_W; 
+    }
+    
+    if (maze_walls[current] & WALL_S) { 
+        int n = idx(x, y-1); 
+        if (n != -1) maze_walls[n] |= WALL_N; 
+    }
+    
+    if (maze_walls[current] & WALL_W) { 
+        int n = idx(x-1, y); 
+        if (n != -1) maze_walls[n] |= WALL_E; 
+    }
 }
 
 void floodFill(int targetX, int targetY, bool isSpeedRun) {
